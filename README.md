@@ -1,5 +1,3 @@
 # Siskanawa
 Sistem informasi Skanawa alias SMKN 9 Malang
-
-<img width="512" height="512" alt="logo-siskanawa" src="https://github.com/user-attachments/assets/aeef4112-d4f9-43b9-aae4-45cdb0bb6352" />
-
+<img width="410" height="390" alt="logo-siskanawa" src="https://github.com/user-attachments/assets/b2296b3d-cc2b-4ab6-9e3d-22f3ce2173f5" />
