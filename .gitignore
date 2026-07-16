@@ -1,0 +1,19 @@
+# Backend
+backend/vendor/
+backend/node_modules/
+backend/.env
+backend/storage/logs/*
+backend/storage/framework/cache/*
+backend/storage/framework/sessions/*
+backend/storage/framework/views/*
+backend/public/storage
+backend/bootstrap/cache/*.php
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+
+# Editor
+.vscode/
+.idea/
