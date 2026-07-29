@@ -36,10 +36,13 @@ export function Sidebar() {
 
   return (
     <aside className="w-64 bg-brand-500 text-white flex flex-col min-h-screen">
-      <div className="px-6 py-5 border-b border-white/10">
-        <h1 className="text-lg font-bold leading-tight">SIM SMKN 9</h1>
-        <p className="text-xs text-white/60 mt-0.5">Malang</p>
-      </div>
+      <div className="px-6 py-5 border-b border-white/10 flex items-center gap-3">
+        <img src="/logo-siskanawa.png" alt="Logo" className="h-9 w-auto" />
+        <div>
+            <h1 className="text-base font-bold leading-tight">SIM SMKN 9</h1>
+            <p className="text-xs text-white/60">Malang</p>
+        </div>
+        </div>
 
       <nav className="flex-1 px-3 py-4 space-y-1">
         {visibleItems.map((item) => {
