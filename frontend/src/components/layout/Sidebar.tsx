@@ -2,18 +2,16 @@ import { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard,
-  Users,
+
   GraduationCap,
-  BookOpen,
-  Building2,
-  Briefcase,
-  HeartHandshake,
+
   Database,
-  CalendarDays,
-  Layers,
+  
   ChevronDown,
   X,
 } from 'lucide-react';
+//belum terpakai : Users, BookOpen, Building2, Briefcase, HeartHandshake,CalendarDays, Layers,
+
 import { useAuth } from '../../contexts/AuthContext';
 
 interface SidebarProps {

@@ -6,6 +6,7 @@ import { LoginPage } from './pages/LoginPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { JurusanPage } from './pages/jurusan/JurusanPage';
 import { TahunAjaranPage } from './pages/tahun-ajaran/TahunAjaranPage';
+import { KelasPage } from './pages/kelas/KelasPage';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/jurusan" element={<JurusanPage />} />
             <Route path="/tahun-ajaran" element={<TahunAjaranPage />} />
+            <Route path="/kelas" element={<KelasPage />} />
             {/* Halaman lain nanti ditambahkan di sini */}
           </Route>
 
