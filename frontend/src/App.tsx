@@ -4,6 +4,7 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import { AppLayout } from './components/layout/AppLayout';
 import { LoginPage } from './pages/LoginPage';
 import { DashboardPage } from './pages/DashboardPage';
+import { JurusanPage } from './pages/jurusan/JurusanPage';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             }
           >
             <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/jurusan" element={<JurusanPage />} />
             {/* Halaman lain nanti ditambahkan di sini */}
           </Route>
 
