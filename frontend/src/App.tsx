@@ -7,6 +7,7 @@ import { DashboardPage } from './pages/DashboardPage';
 import { JurusanPage } from './pages/jurusan/JurusanPage';
 import { TahunAjaranPage } from './pages/tahun-ajaran/TahunAjaranPage';
 import { KelasPage } from './pages/kelas/KelasPage';
+import { SiswaPage } from './pages/siswa/SiswaPage';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             <Route path="/jurusan" element={<JurusanPage />} />
             <Route path="/tahun-ajaran" element={<TahunAjaranPage />} />
             <Route path="/kelas" element={<KelasPage />} />
+            <Route path="/siswa" element={<SiswaPage />} />
             {/* Halaman lain nanti ditambahkan di sini */}
           </Route>
 

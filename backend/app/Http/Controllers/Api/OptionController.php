@@ -40,4 +40,18 @@ class OptionController extends Controller
 
         return response()->json($data);
     }
+
+    // Daftar kelas untuk dropdown (hanya yang tahun ajaran aktif)
+    public function kelas(): JsonResponse
+    {
+        $data = \App\Models\Kelas::with('jurusan', 'tahunAjaran')
+            ->whereHas('tahunAjaran', fn ($q) => $q->where('is_active', true))
+            ->get()
+            ->map(fn ($k) => [
+                'id' => $k->id,
+                'nama_lengkap' => $k->nama_lengkap,
+            ]);
+
+        return response()->json($data);
+    }
 }
