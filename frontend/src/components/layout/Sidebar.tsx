@@ -6,7 +6,7 @@ import {
   GraduationCap,
 
   Database,
-  
+
   ChevronDown,
   X,
 } from 'lucide-react';
@@ -63,6 +63,7 @@ const menuItems: MenuItem[] = [
       { label: 'Mata Pelajaran', path: '/mata-pelajaran' },
       { label: 'Data Siswa', path: '/siswa' },
       { label: 'Data Guru', path: '/guru' },
+      { label: 'Data Tendik', path: '/tendik' },
     ],
   },
   {

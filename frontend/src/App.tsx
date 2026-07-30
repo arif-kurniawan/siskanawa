@@ -8,6 +8,8 @@ import { JurusanPage } from './pages/jurusan/JurusanPage';
 import { TahunAjaranPage } from './pages/tahun-ajaran/TahunAjaranPage';
 import { KelasPage } from './pages/kelas/KelasPage';
 import { SiswaPage } from './pages/siswa/SiswaPage';
+import { GuruPage } from './pages/guru/GuruPage';
+import { TendikPage } from './pages/tendik/TendikPage';
 
 function App() {
   return (
@@ -29,6 +31,8 @@ function App() {
             <Route path="/tahun-ajaran" element={<TahunAjaranPage />} />
             <Route path="/kelas" element={<KelasPage />} />
             <Route path="/siswa" element={<SiswaPage />} />
+            <Route path="/guru" element={<GuruPage />} />
+            <Route path="/tendik" element={<TendikPage />} />
             {/* Halaman lain nanti ditambahkan di sini */}
           </Route>
 
