@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\MasterData\JurusanController;
+use App\Http\Controllers\Api\MasterData\TahunAjaranController;
 use Illuminate\Support\Facades\Route;
 
 // Route publik — tidak butuh autentikasi, tapi tetap dapat session dari statefulApi
@@ -14,4 +15,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Master Data — Jurusan
     Route::apiResource('jurusan', JurusanController::class);
+    Route::apiResource('tahun-ajaran', TahunAjaranController::class);
+    Route::patch('tahun-ajaran/{tahunAjaran}/set-active', [TahunAjaranController::class, 'setActive']);
 });
