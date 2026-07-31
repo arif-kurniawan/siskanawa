@@ -63,6 +63,7 @@ const menuItems: MenuItem[] = [
       { label: 'Mata Pelajaran', path: '/mata-pelajaran' },
       { label: 'Data Siswa', path: '/siswa' },
       { label: 'Data Guru', path: '/guru' },
+      { label: 'Penugasan Mengajar', path: '/penugasan', roles: ['kepala_sekolah', 'tendik'] },
       { label: 'Data Tendik', path: '/tendik' },
     ],
   },
