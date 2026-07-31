@@ -33,11 +33,24 @@ class RolePermissionSeeder extends Seeder
             'view-dashboard-kepsek',
             'view-own-profile',
             'edit-own-profile',
+            'presensi-sholat.scan',
+            'presensi-sholat.kelola',
+            'presensi-sholat.lihat-rekap',
         ];
 
         foreach ($permissions as $permission) {
             Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'web']);
         }
+
+        foreach ($permissions as $p) {
+            \Spatie\Permission\Models\Permission::firstOrCreate(['name' => $p, 'guard_name' => 'web']);
+        }
+
+        // Guru & tendik bisa scan, kepsek & BK lihat rekap
+        \Spatie\Permission\Models\Role::findByName('guru_mapel')->givePermissionTo('presensi-sholat.scan');
+        \Spatie\Permission\Models\Role::findByName('tendik')->givePermissionTo(['presensi-sholat.scan', 'presensi-sholat.kelola']);
+        \Spatie\Permission\Models\Role::findByName('guru_bk')->givePermissionTo(['presensi-sholat.scan', 'presensi-sholat.lihat-rekap']);
+        \Spatie\Permission\Models\Role::findByName('kepala_sekolah')->givePermissionTo(['presensi-sholat.lihat-rekap']);
 
         // Assign permission ke role
         Role::findByName('kepala_sekolah')->givePermissionTo([

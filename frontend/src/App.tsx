@@ -13,6 +13,8 @@ import { TendikPage } from './pages/tendik/TendikPage';
 import { MataPelajaranPage } from './pages/mata-pelajaran/MataPelajaranPage';
 import { PenugasanPage } from './pages/penugasan/PenugasanPage';
 import { JurnalPage } from './pages/jurnal/JurnalPage';
+import { ScanPage } from './pages/presensi-sholat/ScanPage';
+import { RekapSholatPage } from './pages/presensi-sholat/RekapSholatPage';
 
 function App() {
   return (
@@ -39,6 +41,8 @@ function App() {
             <Route path="/mata-pelajaran" element={<MataPelajaranPage />} />
             <Route path="/penugasan" element={<PenugasanPage />} />
             <Route path="/jurnal" element={<JurnalPage />} />
+            <Route path="/presensi-sholat/scan" element={<ScanPage />} />
+            <Route path="/presensi-sholat/rekap" element={<RekapSholatPage />} />
             {/* Halaman lain nanti ditambahkan di sini */}
           </Route>
 

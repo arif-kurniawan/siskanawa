@@ -9,6 +9,7 @@ export interface Siswa {
   jenis_kelamin: 'L' | 'P';
   tempat_lahir: string;
   tanggal_lahir: string;
+  agama: 'Islam' | 'Kristen' | 'Katolik' | 'Hindu' | 'Buddha' | 'Konghucu';
   alamat: string;
   no_hp: string | null;
   status: 'aktif' | 'lulus' | 'pindah' | 'keluar';
@@ -26,6 +27,7 @@ export interface SiswaInput {
   jenis_kelamin: 'L' | 'P';
   tempat_lahir: string;
   tanggal_lahir: string;
+  agama: 'Islam' | 'Kristen' | 'Katolik' | 'Hindu' | 'Buddha' | 'Konghucu';
   alamat: string;
   no_hp?: string;
   angkatan: number;

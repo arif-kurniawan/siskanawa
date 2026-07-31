@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\MasterData\TendikController;
 use App\Http\Controllers\Api\MasterData\MataPelajaranController;
 use App\Http\Controllers\Api\PenugasanMengajarController;
 use App\Http\Controllers\Api\JurnalMengajarController;
+use App\Http\Controllers\Api\PresensiSholatController;
 use Illuminate\Support\Facades\Route;
 
 // Route publik — tidak butuh autentikasi, tapi tetap dapat session dari statefulApi
@@ -40,6 +41,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('options/mata-pelajaran', [OptionController::class, 'mataPelajaran']);
     Route::get('options/siswa-by-kelas/{kelasId}', [OptionController::class, 'siswaByKelas']);
     Route::get('penugasan/milik-saya', [PenugasanMengajarController::class, 'milikSaya']);
+    
+    Route::prefix('presensi-sholat')->group(function () {
+        Route::get('sesi-hari-ini', [PresensiSholatController::class, 'sesiHariIni']);
+        Route::post('catat', [PresensiSholatController::class, 'catat']);
+        Route::get('daftar-hadir', [PresensiSholatController::class, 'daftarHadirHariIni']);
+        Route::get('cari-siswa', [PresensiSholatController::class, 'cariSiswa']);
+        Route::get('rekap', [PresensiSholatController::class, 'rekap']);
+    });
     
 
     Route::get('penugasan', [PenugasanMengajarController::class, 'index']);

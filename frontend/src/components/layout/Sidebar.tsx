@@ -9,7 +9,9 @@ import {
 
   ChevronDown,
   X,
-  School,
+ 
+  BookOpen,
+  Mosque,
 } from 'lucide-react';
 //belum terpakai : Users, BookOpen, Building2, Briefcase, HeartHandshake,CalendarDays, Layers,
 
@@ -83,12 +85,25 @@ const menuItems: MenuItem[] = [
   {
     type: 'group',
     label: 'Pembelajaran',
-    icon: School,
+    icon: BookOpen,
     roles: ['kepala_sekolah', 'guru_bk', 'wali_kelas','guru_mapel'],
     children: [
       { label: 'Jurnal Mengajar', path: '/jurnal', roles: ['kepala_sekolah', 'guru_mapel', 'wali_kelas', 'guru_bk'], },
     ],
   },
+
+  {
+    type: 'group',
+    label: 'Presensi Sholat',
+    icon: Mosque,
+    roles: ['kepala_sekolah', 'guru_mapel', 'tendik', 'guru_bk'],
+    children: [
+      { label: 'Scan Presensi', path: '/presensi-sholat/scan', roles: ['guru_mapel', 'tendik'] },
+      { label: 'Rekap', path: '/presensi-sholat/rekap', roles: ['kepala_sekolah', 'guru_bk', 'tendik'] },
+    ],
+  },
+  
+
 ];
 
 export function Sidebar({ isOpen, onClose }: SidebarProps) {

@@ -13,7 +13,7 @@ interface Props {
 export function SiswaForm({ initial, onSubmit, onCancel }: Props) {
   const [form, setForm] = useState<SiswaInput>({
     nama: '', nis: '', nisn: '', jurusan_id: 0, kelas_id: null,
-    jenis_kelamin: 'L', tempat_lahir: '', tanggal_lahir: '',
+    jenis_kelamin: 'L', tempat_lahir: '', tanggal_lahir: '', agama:'Islam',
     alamat: '', no_hp: '', angkatan: new Date().getFullYear(),
     email: '', status: 'aktif',
   });
@@ -53,6 +53,7 @@ export function SiswaForm({ initial, onSubmit, onCancel }: Props) {
         jenis_kelamin: initial.jenis_kelamin,
         tempat_lahir: initial.tempat_lahir,
         tanggal_lahir: initial.tanggal_lahir,
+        agama: initial.agama,
         alamat: initial.alamat,
         no_hp: initial.no_hp ?? '',
         angkatan: initial.angkatan,
@@ -153,6 +154,20 @@ export function SiswaForm({ initial, onSubmit, onCancel }: Props) {
           <label className="block text-sm font-medium text-slate-700 mb-1">Tanggal Lahir</label>
           <input type="date" value={form.tanggal_lahir} onChange={(e) => set('tanggal_lahir', e.target.value)} className={inputClass} />
           {errors.tanggal_lahir && <p className={errClass}>{errors.tanggal_lahir[0]}</p>}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className="block text-sm font-medium text-slate-700 mb-1">Agama</label>
+          <select value={form.agama} onChange={(e) => set('agama', e.target.value)} className={inputClass}>
+            <option value="Islam">Islam</option>
+            <option value="Kristen">Kristen</option>
+            <option value="Katolik">Katolik</option>
+            <option value="Hindu">Hindu</option>
+            <option value="Budha">Budha</option>
+            <option value="Konghuchu">Konghuchu</option>
+          </select>
         </div>
       </div>
 

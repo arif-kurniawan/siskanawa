@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
@@ -23,6 +24,7 @@ class Siswa extends Model
         'no_hp',
         'status',
         'angkatan',
+        'agama',
     ];
 
     protected function casts(): array
@@ -81,19 +83,18 @@ class Siswa extends Model
     }
 
     // Scope siswa aktif
-    public function scopeAktif($query)
+    public function scopeAktif(Builder $query): Builder
     {
         return $query->where('status', 'aktif');
     }
 
     // Scope per angkatan
-    public function scopeAngkatan($query, int $tahun)
+   public function scopeAngkatan(Builder $query, int $tahun): Builder
     {
         return $query->where('angkatan', $tahun);
     }
 
-    // Scope per jurusan
-    public function scopeJurusan($query, int $jurusanId)
+    public function scopeJurusan(Builder $query, int $jurusanId): Builder
     {
         return $query->where('jurusan_id', $jurusanId);
     }
