@@ -12,6 +12,7 @@ import { GuruPage } from './pages/guru/GuruPage';
 import { TendikPage } from './pages/tendik/TendikPage';
 import { MataPelajaranPage } from './pages/mata-pelajaran/MataPelajaranPage';
 import { PenugasanPage } from './pages/penugasan/PenugasanPage';
+import { JurnalPage } from './pages/jurnal/JurnalPage';
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
             <Route path="/tendik" element={<TendikPage />} />
             <Route path="/mata-pelajaran" element={<MataPelajaranPage />} />
             <Route path="/penugasan" element={<PenugasanPage />} />
+            <Route path="/jurnal" element={<JurnalPage />} />
             {/* Halaman lain nanti ditambahkan di sini */}
           </Route>
 

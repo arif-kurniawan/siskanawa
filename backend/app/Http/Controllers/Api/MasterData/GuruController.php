@@ -40,8 +40,8 @@ class GuruController extends Controller
             // Email default
             $email = $data['email']
                 ?? ($data['nip']
-                    ? $data['nip'] . '@guru.smkn9-malang.sch.id'
-                    : Str::slug($data['nama'], '') . '@guru.smkn9-malang.sch.id');
+                    ? $data['nip'] . '@guru.smkn9malang.sch.id'
+                    : Str::slug($data['nama'], '') . '@guru.smkn9malang.sch.id');
 
             // Password default
             $defaultPassword = $data['nip'] ?: 'guru12345';

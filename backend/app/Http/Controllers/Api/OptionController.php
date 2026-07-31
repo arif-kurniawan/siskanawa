@@ -36,6 +36,7 @@ class OptionController extends Controller
         $data = \App\Models\MataPelajaran::orderBy('nama')->get(['id', 'kode', 'nama']);
         return response()->json($data);
     }
+    
     public function kelas(): JsonResponse
     {
         $data = \App\Models\Kelas::with('jurusan', 'tahunAjaran')
@@ -45,6 +46,22 @@ class OptionController extends Controller
                 'id' => $k->id,
                 'nama_lengkap' => $k->nama_lengkap,
             ]);
+        return response()->json($data);
+    }
+    public function siswaByKelas(int $kelasId): JsonResponse
+    {
+        $data = \App\Models\Siswa::with('user')
+            ->where('kelas_id', $kelasId)
+            ->where('status', 'aktif')
+            ->get()
+            ->map(fn ($s) => [
+                'id' => $s->id,
+                'nis' => $s->nis,
+                'nama' => $s->user?->name,
+            ])
+            ->sortBy('nama')
+            ->values();
+
         return response()->json($data);
     }
 }

@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\MasterData\GuruController;
 use App\Http\Controllers\Api\MasterData\TendikController;
 use App\Http\Controllers\Api\MasterData\MataPelajaranController;
 use App\Http\Controllers\Api\PenugasanMengajarController;
+use App\Http\Controllers\Api\JurnalMengajarController;
 use Illuminate\Support\Facades\Route;
 
 // Route publik — tidak butuh autentikasi, tapi tetap dapat session dari statefulApi
@@ -29,6 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('guru', GuruController::class);
     Route::apiResource('tendik', TendikController::class);
     Route::apiResource('mata-pelajaran', MataPelajaranController::class)->parameters(['mata-pelajaran' => 'mataPelajaran']);
+    Route::apiResource('jurnal', JurnalMengajarController::class)->parameters(['jurnal' => 'jurnalMengajar']);
 
     // Options untuk dropdown
     Route::get('options/jurusan', [OptionController::class, 'jurusan']);
@@ -36,7 +38,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('options/guru', [OptionController::class, 'guru']);
     Route::get('options/kelas', [OptionController::class, 'kelas']);
     Route::get('options/mata-pelajaran', [OptionController::class, 'mataPelajaran']);
+    Route::get('options/siswa-by-kelas/{kelasId}', [OptionController::class, 'siswaByKelas']);
     Route::get('penugasan/milik-saya', [PenugasanMengajarController::class, 'milikSaya']);
+    
 
     Route::get('penugasan', [PenugasanMengajarController::class, 'index']);
     Route::post('penugasan', [PenugasanMengajarController::class, 'store']);

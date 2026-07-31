@@ -9,6 +9,7 @@ import {
 
   ChevronDown,
   X,
+  School,
 } from 'lucide-react';
 //belum terpakai : Users, BookOpen, Building2, Briefcase, HeartHandshake,CalendarDays, Layers,
 
@@ -76,6 +77,16 @@ const menuItems: MenuItem[] = [
       { label: 'PKL', path: '/pkl' },
       { label: 'Bursa Kerja', path: '/bkk' },
       { label: 'Bimbingan Konseling', path: '/bk', roles: ['kepala_sekolah', 'guru_bk'] },
+    ],
+  },
+
+  {
+    type: 'group',
+    label: 'Pembelajaran',
+    icon: School,
+    roles: ['kepala_sekolah', 'guru_bk', 'wali_kelas','guru_mapel'],
+    children: [
+      { label: 'Jurnal Mengajar', path: '/jurnal', roles: ['kepala_sekolah', 'guru_mapel', 'wali_kelas', 'guru_bk'], },
     ],
   },
 ];
