@@ -15,6 +15,8 @@ import { PenugasanPage } from './pages/penugasan/PenugasanPage';
 import { JurnalPage } from './pages/jurnal/JurnalPage';
 import { ScanPage } from './pages/presensi-sholat/ScanPage';
 import { RekapSholatPage } from './pages/presensi-sholat/RekapSholatPage';
+import { PembinaanPage } from './pages/pembinaan/PembinaanPage';
+import { KasusDetailPage } from './pages/pembinaan/KasusDetailPage';
 
 function App() {
   return (
@@ -43,6 +45,8 @@ function App() {
             <Route path="/jurnal" element={<JurnalPage />} />
             <Route path="/presensi-sholat/scan" element={<ScanPage />} />
             <Route path="/presensi-sholat/rekap" element={<RekapSholatPage />} />
+            <Route path="/pembinaan" element={<PembinaanPage />} />
+            <Route path="/pembinaan/:id" element={<KasusDetailPage />} />
             {/* Halaman lain nanti ditambahkan di sini */}
           </Route>
 

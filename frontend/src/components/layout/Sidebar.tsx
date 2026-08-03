@@ -74,11 +74,21 @@ const menuItems: MenuItem[] = [
     type: 'group',
     label: 'Kesiswaan',
     icon: GraduationCap,
+    roles: ['kepala_sekolah', 'guru_bk', 'wali_kelas','guru_mapel'],
+    children: [
+      { label: 'Bimbingan Konseling', path: '/bk', roles: ['kepala_sekolah', 'guru_bk'] },
+      { label: 'Pembinaan Siswa (Parenting)', path: '/pembinaan', roles: ['kepala_sekolah', 'guru_mapel', 'wali_kelas', 'guru_bk'],},
+    ],
+  },
+
+  {
+    type: 'group',
+    label: 'Kehumasan',
+    icon: GraduationCap,
     roles: ['kepala_sekolah', 'guru_bk', 'wali_kelas'],
     children: [
       { label: 'PKL', path: '/pkl' },
       { label: 'Bursa Kerja', path: '/bkk' },
-      { label: 'Bimbingan Konseling', path: '/bk', roles: ['kepala_sekolah', 'guru_bk'] },
     ],
   },
 

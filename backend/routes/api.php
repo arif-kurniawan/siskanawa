@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\MasterData\MataPelajaranController;
 use App\Http\Controllers\Api\PenugasanMengajarController;
 use App\Http\Controllers\Api\JurnalMengajarController;
 use App\Http\Controllers\Api\PresensiSholatController;
+use App\Http\Controllers\Api\KasusPembinaanController;
 use Illuminate\Support\Facades\Route;
 
 // Route publik — tidak butuh autentikasi, tapi tetap dapat session dari statefulApi
@@ -54,4 +55,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('penugasan', [PenugasanMengajarController::class, 'index']);
     Route::post('penugasan', [PenugasanMengajarController::class, 'store']);
     Route::delete('penugasan/{penugasanMengajar}', [PenugasanMengajarController::class, 'destroy']);
+
+    Route::prefix('pembinaan')->group(function () {
+        Route::get('/', [KasusPembinaanController::class, 'index']);
+        Route::post('/', [KasusPembinaanController::class, 'store']);
+        Route::get('{kasusPembinaan}', [KasusPembinaanController::class, 'show']);
+        Route::post('{kasusPembinaan}/tindak-lanjut', [KasusPembinaanController::class, 'tambahTindakLanjut']);
+        Route::post('{kasusPembinaan}/eskalasi', [KasusPembinaanController::class, 'eskalasi']);
+    });
 });

@@ -71,5 +71,20 @@ class RolePermissionSeeder extends Seeder
         foreach (['guru_mapel', 'wali_kelas', 'guru_bk', 'siswa', 'wali_murid', 'kaprodi', 'wakil_kepala_sekolah'] as $r) {
             Role::findByName($r)->givePermissionTo(['view-own-profile', 'edit-own-profile']);
         }
+
+        $permissions = [
+            'pembinaan.lihat',       // lihat kasus
+            'pembinaan.buat',        // buat kasus & tindak lanjut
+            'pembinaan.eskalasi',    // eskalasi kasus
+            'pembinaan.rahasia',     // akses kasus rahasia (BK, kepsek)
+        ];
+        foreach ($permissions as $p) {
+            \Spatie\Permission\Models\Permission::firstOrCreate(['name' => $p, 'guard_name' => 'web']);
+        }
+
+        Role::findByName('guru_mapel')->givePermissionTo(['pembinaan.lihat', 'pembinaan.buat']);
+        Role::findByName('wali_kelas')->givePermissionTo(['pembinaan.lihat', 'pembinaan.buat', 'pembinaan.eskalasi']);
+        Role::findByName('guru_bk')->givePermissionTo(['pembinaan.lihat', 'pembinaan.buat', 'pembinaan.eskalasi', 'pembinaan.rahasia']);
+        Role::findByName('kepala_sekolah')->givePermissionTo(['pembinaan.lihat', 'pembinaan.buat', 'pembinaan.eskalasi', 'pembinaan.rahasia']);
     }
 }

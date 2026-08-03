@@ -13,23 +13,42 @@ class PenugasanMengajar extends Model
         'guru_id', 'mata_pelajaran_id', 'kelas_id', 'tahun_ajaran_id',
     ];
 
-    public function guru(): BelongsTo
+    // ... relasi yang sudah ada ...
+
+    protected static function booted(): void
     {
-        return $this->belongsTo(User::class, 'guru_id');
+        // Saat penugasan dibuat
+        static::created(function (PenugasanMengajar $penugasan) {
+            if ($penugasan->isMapelBK()) {
+                $guru = User::find($penugasan->guru_id);
+                $guru?->assignRole('guru_bk');
+            }
+        });
+
+        // Saat penugasan dihapus
+        static::deleted(function (PenugasanMengajar $penugasan) {
+            if ($penugasan->isMapelBK()) {
+                $guru = User::find($penugasan->guru_id);
+                if ($guru) {
+                    // Cabut role BK hanya kalau dia tidak lagi mengampu BK di penugasan lain
+                    $masihMengampuBK = PenugasanMengajar::where('guru_id', $penugasan->guru_id)
+                        ->where('id', '!=', $penugasan->id)
+                        ->whereHas('mataPelajaran', fn ($q) => $q->where('kode', 'BK'))
+                        ->exists();
+
+                    if (! $masihMengampuBK) {
+                        $guru->removeRole('guru_bk');
+                    }
+                }
+            }
+        });
     }
 
-    public function mataPelajaran(): BelongsTo
+    // Cek apakah penugasan ini untuk mapel BK
+    public function isMapelBK(): bool
     {
-        return $this->belongsTo(MataPelajaran::class);
+        return $this->mataPelajaran?->kode === 'BK';
     }
 
-    public function kelas(): BelongsTo
-    {
-        return $this->belongsTo(Kelas::class);
-    }
-
-    public function tahunAjaran(): BelongsTo
-    {
-        return $this->belongsTo(TahunAjaran::class);
-    }
+    // ... relasi guru, mataPelajaran, kelas, tahunAjaran ...
 }
