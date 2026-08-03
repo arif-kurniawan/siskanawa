@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\PenugasanMengajarController;
 use App\Http\Controllers\Api\JurnalMengajarController;
 use App\Http\Controllers\Api\PresensiSholatController;
 use App\Http\Controllers\Api\KasusPembinaanController;
+use App\Http\Controllers\Api\DeteksiDiniController;
 use Illuminate\Support\Facades\Route;
 
 // Route publik — tidak butuh autentikasi, tapi tetap dapat session dari statefulApi
@@ -62,5 +63,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('{kasusPembinaan}', [KasusPembinaanController::class, 'show']);
         Route::post('{kasusPembinaan}/tindak-lanjut', [KasusPembinaanController::class, 'tambahTindakLanjut']);
         Route::post('{kasusPembinaan}/eskalasi', [KasusPembinaanController::class, 'eskalasi']);
+    });
+
+    Route::prefix('deteksi-dini')->group(function () {
+        Route::get('kehadiran', [DeteksiDiniController::class, 'index']);
+        Route::post('generate-draft', [DeteksiDiniController::class, 'generateDraft']);
     });
 });

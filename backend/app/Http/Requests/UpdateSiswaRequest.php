@@ -31,7 +31,7 @@ class UpdateSiswaRequest extends FormRequest
             'no_hp' => ['nullable', 'string', 'max:20'],
             'angkatan' => ['required', 'integer', 'min:2000', 'max:2100'],
             'status' => ['required', 'in:aktif,lulus,pindah,keluar'],
-            'email' => ['nullable', 'email', Rule::unique('users', 'email')->ignore($userId)],
+            'email' => ['nullable', 'email', Rule::unique(  'users', 'email')->ignore($userId)],
         ];
     }
 }

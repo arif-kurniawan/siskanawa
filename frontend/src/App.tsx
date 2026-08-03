@@ -17,6 +17,7 @@ import { ScanPage } from './pages/presensi-sholat/ScanPage';
 import { RekapSholatPage } from './pages/presensi-sholat/RekapSholatPage';
 import { PembinaanPage } from './pages/pembinaan/PembinaanPage';
 import { KasusDetailPage } from './pages/pembinaan/KasusDetailPage';
+import { DeteksiDiniPage } from './pages/deteksi-dini/DeteksiDiniPage';
 
 function App() {
   return (
@@ -47,6 +48,7 @@ function App() {
             <Route path="/presensi-sholat/rekap" element={<RekapSholatPage />} />
             <Route path="/pembinaan" element={<PembinaanPage />} />
             <Route path="/pembinaan/:id" element={<KasusDetailPage />} />
+            <Route path="/deteksi-dini" element={<DeteksiDiniPage />} />
             {/* Halaman lain nanti ditambahkan di sini */}
           </Route>
 

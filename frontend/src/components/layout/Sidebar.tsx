@@ -78,6 +78,8 @@ const menuItems: MenuItem[] = [
     children: [
       { label: 'Bimbingan Konseling', path: '/bk', roles: ['kepala_sekolah', 'guru_bk'] },
       { label: 'Pembinaan Siswa (Parenting)', path: '/pembinaan', roles: ['kepala_sekolah', 'guru_mapel', 'wali_kelas', 'guru_bk'],},
+      { label: 'Deteksi Dini', path: '/deteksi-dini', roles: ['kepala_sekolah', 'wali_kelas', 'guru_bk'],
+},
     ],
   },
 

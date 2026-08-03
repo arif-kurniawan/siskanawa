@@ -50,5 +50,23 @@ class PenugasanMengajar extends Model
         return $this->mataPelajaran?->kode === 'BK';
     }
 
-    // ... relasi guru, mataPelajaran, kelas, tahunAjaran ...
+    public function guru(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'guru_id');
+    }
+ 
+    public function mataPelajaran(): BelongsTo
+    {
+        return $this->belongsTo(MataPelajaran::class);
+    }
+ 
+    public function kelas(): BelongsTo
+    {
+        return $this->belongsTo(Kelas::class);
+    }
+ 
+    public function tahunAjaran(): BelongsTo
+    {
+        return $this->belongsTo(TahunAjaran::class);
+    }
 }
