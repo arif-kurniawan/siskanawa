@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Jurusan;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Builder;
 
 class Kelas extends Model
 {
@@ -95,7 +96,7 @@ class Kelas extends Model
     }
  
     // Scope untuk kelas di tahun ajaran aktif
-    public function scopeAktif($query)
+    public function scopeAktif(Builder $query): Builder
     {
         return $query->whereHas('tahunAjaran', function ($q) {
             $q->where('is_active', true);
@@ -103,7 +104,7 @@ class Kelas extends Model
     }
  
     // Scope untuk filter per tingkat
-    public function scopeTingkat($query, string $tingkat)
+    public function scopeTingkat(Builder $query, string $tingkat): Builder
     {
         return $query->where('tingkat', $tingkat);
     }
