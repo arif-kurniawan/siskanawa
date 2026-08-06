@@ -7,7 +7,8 @@ use App\Models\JenisPelanggaran;
 use App\Models\KasusPembinaan;
 use App\Models\Siswa;
 use App\Models\TahunAjaran;
-use App\Models\User;
+use App\Models\PengaturanSanksi;
+//use App\Models\User;
 
 class TatibPembinaanService
 {
@@ -74,7 +75,7 @@ class TatibPembinaanService
         Siswa $siswa,
         CatatanPelanggaran $catatan,
         int $totalPoin,
-        $sanksi,
+        ?PengaturanSanksi $sanksi,
         bool $adalahBerat,
         TahunAjaran $ta
     ): KasusPembinaan {

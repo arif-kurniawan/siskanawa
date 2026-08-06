@@ -109,6 +109,7 @@ class KasusPembinaanController extends Controller
             'siswa.user', 'siswa.kelas.jurusan',
             'pelapor', 'penanggungJawab',
             'tindakLanjut.user',
+            'tindakLanjut.responsOrtu.waliMurid.user', // ← tambahkan ini
         ]);
 
         return response()->json($kasusPembinaan);

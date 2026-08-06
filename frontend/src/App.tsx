@@ -22,6 +22,10 @@ import { JenisPelanggaranPage } from './pages/tatib/JenisPelanggaranPage';
 import { CatatPelanggaranPage } from './pages/tatib/CatatPelanggaranPage';
 import { RekapPoinPage } from './pages/tatib/RekapPoinPage';
 import { DetailPoinSiswaPage } from './pages/tatib/DetailPoinSiswaPage';
+import { PortalOrtuPage } from './pages/portal-ortu/PortalOrtuPage';
+import { BukuPenghubungPage } from './pages/portal-ortu/BukuPenghubungPage';
+import { WaliMuridPage } from './pages/wali-murid/WaliMuridPage';
+
 
 function App() {
   return (
@@ -57,6 +61,9 @@ function App() {
             <Route path="/tatib/catat" element={<CatatPelanggaranPage />} />
             <Route path="/tatib/rekap-poin" element={<RekapPoinPage />} />
             <Route path="/tatib/rekap-poin/:siswaId" element={<DetailPoinSiswaPage />} />
+            <Route path="/portal-ortu" element={<PortalOrtuPage />} />
+            <Route path="/portal-ortu/anak/:siswaId" element={<BukuPenghubungPage />} />
+            <Route path="/wali-murid" element={<WaliMuridPage />} />
             {/* Halaman lain nanti ditambahkan di sini */}
           </Route>
 

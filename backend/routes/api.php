@@ -18,6 +18,8 @@ use App\Http\Controllers\Api\Tatib\JenisPelanggaranController;
 use App\Http\Controllers\Api\Tatib\TatibOptionController;
 use App\Http\Controllers\Api\Tatib\CatatanPelanggaranController;
 use App\Http\Controllers\Api\Tatib\RekapPoinController;
+use App\Http\Controllers\Api\PortalOrtu\BukuPenghubungController;
+use App\Http\Controllers\Api\MasterData\WaliMuridController;
 use Illuminate\Support\Facades\Route;
 
 // Route publik — tidak butuh autentikasi, tapi tetap dapat session dari statefulApi
@@ -95,4 +97,20 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('rekap-poin', [RekapPoinController::class, 'index']);
         Route::get('rekap-poin/{siswa}', [RekapPoinController::class, 'show']);
     });
+
+    // Portal Ortu — hanya untuk wali murid
+    Route::prefix('portal-ortu')->middleware('role:wali_murid')->group(function () {
+        Route::get('anak-saya', [BukuPenghubungController::class, 'anakSaya']);
+        Route::get('buku-penghubung/{siswaId}', [BukuPenghubungController::class, 'bukuPenghubung']);
+        Route::post('buku-penghubung/balas/{tindakLanjutId}', [BukuPenghubungController::class, 'balas']);
+    });
+
+    Route::prefix('wali-murid')->group(function () {
+        // Kelola hubungan anak (SEBELUM apiResource)
+        Route::post('{waliMurid}/anak', [WaliMuridController::class, 'tambahAnak']);
+        Route::delete('{waliMurid}/anak/{siswaId}', [WaliMuridController::class, 'lepasAnak']);
+    });
+
+    Route::apiResource('wali-murid', WaliMuridController::class)
+        ->parameters(['wali-murid' => 'waliMurid']);
 });

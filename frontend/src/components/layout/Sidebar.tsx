@@ -66,6 +66,7 @@ const menuItems: MenuItem[] = [
       { label: 'Kelas', path: '/kelas' },
       { label: 'Mata Pelajaran', path: '/mata-pelajaran' },
       { label: 'Data Siswa', path: '/siswa' },
+      { label: 'Wali Murid', path: '/wali-murid', roles: ['kepala_sekolah', 'tendik'] },
       { label: 'Data Guru', path: '/guru' },
       { label: 'Penugasan Mengajar', path: '/penugasan', roles: ['kepala_sekolah', 'tendik'] },
       { label: 'Data Tendik', path: '/tendik' },
@@ -126,6 +127,14 @@ const menuItems: MenuItem[] = [
       { label: 'Scan Presensi', path: '/presensi-sholat/scan', roles: ['guru_mapel', 'tendik'] },
       { label: 'Rekap', path: '/presensi-sholat/rekap', roles: ['kepala_sekolah', 'guru_bk', 'tendik'] },
     ],
+  },
+
+  {
+    type: 'link',
+    label: 'Buku Penghubung',
+    path: '/portal-ortu',
+    icon: BookOpen, // dari lucide-react
+    roles: ['wali_murid'],
   },
   
 
