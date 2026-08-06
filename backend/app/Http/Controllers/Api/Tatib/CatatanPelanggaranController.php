@@ -6,12 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCatatanPelanggaranRequest;
 use App\Http\Requests\StorePenghapusanPoinRequest;
 use App\Http\Resources\CatatanPelanggaranResource;
+use App\Services\TatibPembinaanService;
 use App\Models\CatatanPelanggaran;
 use App\Models\JenisPelanggaran;
 use App\Models\TahunAjaran;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+
 
 class CatatanPelanggaranController extends Controller
 {
@@ -74,6 +76,20 @@ class CatatanPelanggaranController extends Controller
         ]);
 
         $catatan->load(['siswa', 'jenisPelanggaran', 'pencatat']);
+
+        // Evaluasi otomatis: buat/eskalasi kasus pembinaan kalau ambang tercapai
+        $kasus = app(TatibPembinaanService::class)->evaluasi($catatan);
+
+        return (new CatatanPelanggaranResource($catatan))
+            ->additional([
+                'kasus_dibuat' => $kasus ? [
+                    'id' => $kasus->id,
+                    'judul' => $kasus->judul,
+                    'baru' => $kasus->wasRecentlyCreated,
+                ] : null,
+            ])
+            ->response()
+            ->setStatusCode(201);
 
         return (new CatatanPelanggaranResource($catatan))->response()->setStatusCode(201);
     }

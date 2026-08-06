@@ -145,10 +145,15 @@ export function CatatPelanggaranPage() {
     };
 
     try {
-      await catatanService.create(payload);
-      setSuccessMsg(
-        `Pelanggaran "${selectedPelanggaran?.nama}" untuk ${selectedSiswa!.nama} berhasil dicatat (+${selectedPelanggaran?.poin} poin).`
-      );
+      const result = await catatanService.create(payload);
+      let pesan = `Pelanggaran "${selectedPelanggaran?.nama}" untuk ${selectedSiswa!.nama} berhasil dicatat (+${selectedPelanggaran?.poin} poin).`;
+      if (result.kasus_dibuat) {
+        pesan += result.kasus_dibuat.baru
+          ? ` ⚠️ Poin mencapai ambang — kasus pembinaan otomatis dibuat.`
+          : ` ⚠️ Ditambahkan ke kasus pembinaan yang sedang berjalan.`;
+  }
+
+  setSuccessMsg(pesan);
       resetForm();
     } catch (err: any) {
       if (err.response?.status === 422) {
