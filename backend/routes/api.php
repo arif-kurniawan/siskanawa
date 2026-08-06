@@ -14,6 +14,10 @@ use App\Http\Controllers\Api\JurnalMengajarController;
 use App\Http\Controllers\Api\PresensiSholatController;
 use App\Http\Controllers\Api\KasusPembinaanController;
 use App\Http\Controllers\Api\DeteksiDiniController;
+use App\Http\Controllers\Api\Tatib\JenisPelanggaranController;
+use App\Http\Controllers\Api\Tatib\TatibOptionController;
+use App\Http\Controllers\Api\Tatib\CatatanPelanggaranController;
+use App\Http\Controllers\Api\Tatib\RekapPoinController;
 use Illuminate\Support\Facades\Route;
 
 // Route publik — tidak butuh autentikasi, tapi tetap dapat session dari statefulApi
@@ -68,5 +72,27 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('deteksi-dini')->group(function () {
         Route::get('kehadiran', [DeteksiDiniController::class, 'index']);
         Route::post('generate-draft', [DeteksiDiniController::class, 'generateDraft']);
+    });
+
+    // Modul Tatib
+    Route::prefix('tatib')->group(function () {
+        // Options & pengaturan (harus SEBELUM apiResource)
+        Route::get('options/pasal', [TatibOptionController::class, 'pasal']);
+        Route::get('options/jenis', [TatibOptionController::class, 'jenis']);
+        Route::patch('jenis/{jenisTatib}/poin', [TatibOptionController::class, 'updateJenisPoin']);
+        Route::get('sanksi', [TatibOptionController::class, 'sanksi']);
+
+        // CRUD jenis pelanggaran
+        Route::apiResource('jenis-pelanggaran', JenisPelanggaranController::class);
+
+        // Pencatatan pelanggaran
+        Route::get('catatan', [CatatanPelanggaranController::class, 'index']);
+        Route::post('catatan', [CatatanPelanggaranController::class, 'store']);
+        Route::post('catatan/penghapusan-poin', [CatatanPelanggaranController::class, 'penghapusanPoin']);
+        Route::delete('catatan/{catatanPelanggaran}', [CatatanPelanggaranController::class, 'destroy']);
+
+        // Rekap poin (route spesifik SEBELUM {siswa})
+        Route::get('rekap-poin', [RekapPoinController::class, 'index']);
+        Route::get('rekap-poin/{siswa}', [RekapPoinController::class, 'show']);
     });
 });

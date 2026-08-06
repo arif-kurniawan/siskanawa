@@ -18,6 +18,10 @@ import { RekapSholatPage } from './pages/presensi-sholat/RekapSholatPage';
 import { PembinaanPage } from './pages/pembinaan/PembinaanPage';
 import { KasusDetailPage } from './pages/pembinaan/KasusDetailPage';
 import { DeteksiDiniPage } from './pages/deteksi-dini/DeteksiDiniPage';
+import { JenisPelanggaranPage } from './pages/tatib/JenisPelanggaranPage';
+import { CatatPelanggaranPage } from './pages/tatib/CatatPelanggaranPage';
+import { RekapPoinPage } from './pages/tatib/RekapPoinPage';
+import { DetailPoinSiswaPage } from './pages/tatib/DetailPoinSiswaPage';
 
 function App() {
   return (
@@ -49,6 +53,10 @@ function App() {
             <Route path="/pembinaan" element={<PembinaanPage />} />
             <Route path="/pembinaan/:id" element={<KasusDetailPage />} />
             <Route path="/deteksi-dini" element={<DeteksiDiniPage />} />
+            <Route path="/tatib/jenis-pelanggaran" element={<JenisPelanggaranPage />} />
+            <Route path="/tatib/catat" element={<CatatPelanggaranPage />} />
+            <Route path="/tatib/rekap-poin" element={<RekapPoinPage />} />
+            <Route path="/tatib/rekap-poin/:siswaId" element={<DetailPoinSiswaPage />} />
             {/* Halaman lain nanti ditambahkan di sini */}
           </Route>
 

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Siswa extends Model
 {
@@ -97,5 +98,19 @@ class Siswa extends Model
     public function scopeJurusan(Builder $query, int $jurusanId): Builder
     {
         return $query->where('jurusan_id', $jurusanId);
+    }
+
+    public function catatanPelanggaran(): HasMany
+    {
+        return $this->hasMany(CatatanPelanggaran::class);
+    }
+
+    // Total poin siswa pada periode tertentu
+    public function totalPoin(int $tahunAjaranId, string $semester): int
+    {
+        return (int) $this->catatanPelanggaran()
+            ->where('tahun_ajaran_id', $tahunAjaranId)
+            ->where('semester', $semester)
+            ->sum('poin');
     }
 }

@@ -12,6 +12,7 @@ import {
  
   BookOpen,
   Mosque,
+  ShieldAlert,
 } from 'lucide-react';
 //belum terpakai : Users, BookOpen, Building2, Briefcase, HeartHandshake,CalendarDays, Layers,
 
@@ -101,6 +102,18 @@ const menuItems: MenuItem[] = [
     roles: ['kepala_sekolah', 'guru_bk', 'wali_kelas','guru_mapel'],
     children: [
       { label: 'Jurnal Mengajar', path: '/jurnal', roles: ['kepala_sekolah', 'guru_mapel', 'wali_kelas', 'guru_bk'], },
+    ],
+  },
+
+  {
+    type: 'group',
+    label: 'Tata Tertib',
+    icon: ShieldAlert, // import dari lucide-react
+    roles: ['kepala_sekolah', 'tendik', 'guru_bk'],
+    children: [
+      { label: 'Jenis Pelanggaran', path: '/tatib/jenis-pelanggaran' },
+      { label: 'Catat Pelanggaran', path: '/tatib/catat' },
+      { label: 'Rekap Poin', path: '/tatib/rekap-poin' },
     ],
   },
 
