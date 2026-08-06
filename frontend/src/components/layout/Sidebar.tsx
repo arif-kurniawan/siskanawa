@@ -109,11 +109,11 @@ const menuItems: MenuItem[] = [
     type: 'group',
     label: 'Tata Tertib',
     icon: ShieldAlert, // import dari lucide-react
-    roles: ['kepala_sekolah', 'tendik', 'guru_bk'],
+    roles: ['kepala_sekolah', 'tendik', 'guru_bk','guru_mapel','wali_kelas'],
     children: [
-      { label: 'Jenis Pelanggaran', path: '/tatib/jenis-pelanggaran' },
-      { label: 'Catat Pelanggaran', path: '/tatib/catat' },
-      { label: 'Rekap Poin', path: '/tatib/rekap-poin' },
+      { label: 'Jenis Pelanggaran', path: '/tatib/jenis-pelanggaran',roles: ['kepala_sekolah']},
+      { label: 'Catat Pelanggaran', path: '/tatib/catat', roles: ['kepala_sekolah', 'guru_mapel', 'wali_kelas', 'guru_bk']},
+      { label: 'Rekap Poin', path: '/tatib/rekap-poin', roles: ['kepala_sekolah', 'guru_mapel', 'wali_kelas', 'guru_bk']},
     ],
   },
 
