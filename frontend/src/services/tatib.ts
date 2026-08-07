@@ -62,6 +62,7 @@ export interface RekapPoinRow {
   total_poin: number;
   status_sanksi: string | null;
   level_sanksi: number | null;
+  foto_url?: string | null;   // ← tambahkan
 }
 
 export interface RiwayatItem {

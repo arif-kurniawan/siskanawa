@@ -16,6 +16,7 @@ export interface Siswa {
   angkatan: number;
   jurusan?: { id: number; kode: string; nama: string };
   kelas?: { id: number; nama_lengkap: string } | null;
+  foto_url?: string | null;
 }
 
 export interface SiswaInput {
@@ -33,6 +34,7 @@ export interface SiswaInput {
   angkatan: number;
   email?: string;
   status?: string;
+  foto_url?: string | null;
 }
 
 export interface Paginated<T> {
@@ -51,14 +53,31 @@ export const siswaService = {
     return response.data;
   },
 
-  async create(data: SiswaInput): Promise<Siswa> {
-    const response = await apiClient.post('/api/siswa', data);
+  // create menerima FormData (supaya foto ikut)
+  async create(data: FormData): Promise<Siswa> {
+    const response = await apiClient.post('/api/siswa', data, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
     return response.data.data;
   },
 
-  async update(id: number, data: SiswaInput): Promise<Siswa> {
-    const response = await apiClient.put(`/api/siswa/${id}`, data);
+  // update: POST + _method PUT (spoofing) supaya file terbaca PHP
+  async update(id: number, data: FormData): Promise<Siswa> {
+    data.append('_method', 'PUT');
+    const response = await apiClient.post(`/api/siswa/${id}`, data, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
     return response.data.data;
+  },
+
+  // ganti foto saja (endpoint khusus)
+  async updateFoto(id: number, foto: File) {
+    const form = new FormData();
+    form.append('foto', foto);
+    const res = await apiClient.post(`/api/siswa/${id}/foto`, form, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return res.data;
   },
 
   async remove(id: number): Promise<void> {
@@ -66,7 +85,6 @@ export const siswaService = {
   },
 };
 
-// Tambahan option kelas di service kelas atau di sini
 export interface OptionKelas { id: number; nama_lengkap: string; }
 export const optionKelasService = {
   async kelas(): Promise<OptionKelas[]> {

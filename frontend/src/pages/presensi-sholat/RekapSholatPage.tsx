@@ -11,6 +11,7 @@ interface RekapSiswa {
   tidak_hadir: number;
   persen_tidak_hadir: number;
   kategori: 'hijau' | 'kuning' | 'merah';
+  foto_url?: string | null;
 }
 
 interface RekapData {
@@ -206,9 +207,21 @@ export function RekapSholatPage() {
               ) : (
                 filtered.map((s) => (
                   <tr key={s.siswa_id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50">
+                    
                     <td className="px-4 py-3">
-                      <p className="font-medium text-slate-800">{s.nama}</p>
-                      <p className="text-xs text-slate-400">{s.nis}</p>
+                      <div className="flex items-center gap-3">
+                        {s.foto_url ? (
+                          <img src={s.foto_url} alt={s.nama} className="h-9 w-9 rounded-full object-cover border border-slate-200" />
+                        ) : (
+                          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-200 text-sm font-semibold text-slate-500">
+                            {s.nama.charAt(0)}
+                          </div>
+                        )}
+                        <div>
+                          <p className="font-medium text-slate-800">{s.nama}</p>
+                          <p className="text-xs text-slate-400">{s.nis}</p>
+                        </div>
+                      </div>
                     </td>
                     <td className="px-4 py-3 text-slate-600">{s.kelas || '—'}</td>
                     <td className="px-4 py-3 text-center text-slate-600 tabular-nums">{s.hadir}</td>

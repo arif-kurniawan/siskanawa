@@ -22,6 +22,8 @@ class SiswaResource extends JsonResource
             'no_hp' => $this->no_hp,
             'status' => $this->status,
             'angkatan' => $this->angkatan,
+            'agama' => $this->agama,
+            'foto_url' => $this->foto_url,
             'jurusan' => $this->whenLoaded('jurusan', fn () => [
                 'id' => $this->jurusan->id,
                 'kode' => $this->jurusan->kode,

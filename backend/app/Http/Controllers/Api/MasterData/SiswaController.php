@@ -12,6 +12,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class SiswaController extends Controller
 {
@@ -48,7 +49,13 @@ class SiswaController extends Controller
     {
         $data = $request->validated();
 
-        $siswa = DB::transaction(function () use ($data) {
+        // Simpan foto dulu (kalau ada), ambil path-nya
+        $fotoPath = null;
+        if ($request->hasFile('foto')) {
+            $fotoPath = $request->file('foto')->store('siswa/foto', 'public');
+        }
+
+        $siswa = DB::transaction(function () use ($data, $fotoPath) {
             // Email default: NIS + domain, kalau tidak diisi
             $email = $data['email'] ?? $data['nis'] . '@siswa.smkn9malang.sch.id';
 
@@ -78,6 +85,7 @@ class SiswaController extends Controller
                 'no_hp' => $data['no_hp'] ?? null,
                 'angkatan' => $data['angkatan'],
                 'status' => 'aktif',
+                'foto_path' => $fotoPath,
             ]);
         });
 
@@ -97,14 +105,23 @@ class SiswaController extends Controller
     {
         $data = $request->validated();
 
-        DB::transaction(function () use ($data, $siswa) {
-            // Update data user (nama, email)
+        // Simpan foto baru (kalau ada), hapus foto lama
+        $fotoPath = $siswa->foto_path; // pertahankan foto lama kalau tidak ganti
+        if ($request->hasFile('foto')) {
+            if ($siswa->foto_path) {
+                Storage::disk('public')->delete($siswa->foto_path);
+            }
+            $fotoPath = $request->file('foto')->store('siswa/foto', 'public');
+        }
+
+        DB::transaction(function () use ($data, $siswa, $fotoPath) {
+            // 1. Update akun user
             $siswa->user->update([
                 'name' => $data['nama'],
                 'email' => $data['email'] ?? $siswa->user->email,
             ]);
 
-            // Update data siswa
+            // 2. Update record siswa
             $siswa->update([
                 'nis' => $data['nis'],
                 'nisn' => $data['nisn'] ?? null,
@@ -117,13 +134,33 @@ class SiswaController extends Controller
                 'alamat' => $data['alamat'],
                 'no_hp' => $data['no_hp'] ?? null,
                 'angkatan' => $data['angkatan'],
-                'status' => $data['status'],
+                'foto_path' => $fotoPath,
             ]);
         });
 
         $siswa->load(['user', 'jurusan', 'kelas']);
 
         return (new SiswaResource($siswa))->response();
+    }
+
+    public function updateFoto(Request $request, Siswa $siswa): JsonResponse
+    {
+        $request->validate([
+            'foto' => ['required', 'image', 'mimes:jpeg,jpg,png', 'max:2048'],
+        ]);
+
+        // Hapus foto lama
+        if ($siswa->foto_path) {
+            Storage::disk('public')->delete($siswa->foto_path);
+        }
+
+        $siswa->foto_path = $request->file('foto')->store('siswa/foto', 'public');
+        $siswa->save();
+
+        return response()->json([
+            'message' => 'Foto siswa berhasil diperbarui.',
+            'foto_url' => $siswa->foto_url,
+        ]);
     }
 
     public function destroy(Siswa $siswa): JsonResponse

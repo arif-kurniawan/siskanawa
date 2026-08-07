@@ -26,7 +26,14 @@ class Siswa extends Model
         'status',
         'angkatan',
         'agama',
+        'foto_path',
     ];
+    protected $appends = ['foto_url'];
+
+    public function getFotoUrlAttribute(): ?string
+    {
+        return $this->foto_path ? asset('storage/' . $this->foto_path) : null;
+    }
 
     protected function casts(): array
     {

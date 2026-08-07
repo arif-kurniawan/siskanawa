@@ -14,6 +14,7 @@ interface SiswaLite {
   nama: string;
   nis: string;
   kelas?: string;
+  foto_url?: string | null;   // ← tambahkan baris ini
 }
 
 type FormErrors = Record<string, string[]>;
@@ -196,11 +197,25 @@ export function CatatPelanggaranPage() {
 
           {selectedSiswa ? (
             <div className="flex items-center justify-between rounded-lg border border-brand-200 bg-brand-50 px-3 py-2">
-              <div>
-                <div className="text-sm font-medium text-slate-900">{selectedSiswa.nama}</div>
-                <div className="text-xs text-slate-500">
-                  NIS {selectedSiswa.nis}
-                  {selectedSiswa.kelas ? ` • ${selectedSiswa.kelas}` : ''}
+              <div className="flex items-center gap-3">
+                {/* Foto siswa */}
+                {selectedSiswa.foto_url ? (
+                  <img
+                    src={selectedSiswa.foto_url}
+                    alt={selectedSiswa.nama}
+                    className="h-14 w-14 rounded-lg object-cover border border-slate-200"
+                  />
+                ) : (
+                  <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-slate-200 text-lg font-bold text-slate-500">
+                    {selectedSiswa.nama.charAt(0)}
+                  </div>
+                )}
+                <div>
+                  <div className="text-sm font-medium text-slate-900">{selectedSiswa.nama}</div>
+                  <div className="text-xs text-slate-500">
+                    NIS {selectedSiswa.nis}
+                    {selectedSiswa.kelas ? ` • ${selectedSiswa.kelas}` : ''}
+                  </div>
                 </div>
               </div>
               <button
@@ -231,13 +246,27 @@ export function CatatPelanggaranPage() {
                     <li key={s.id}>
                       <button
                         onClick={() => pickSiswa(s)}
-                        className="flex w-full flex-col items-start px-3 py-2 text-left hover:bg-slate-50"
+                        className="flex w-full items-center gap-3 px-3 py-2 text-left hover:bg-slate-50"
                       >
-                        <span className="text-sm text-slate-900">{s.nama}</span>
-                        <span className="text-xs text-slate-500">
-                          NIS {s.nis}
-                          {s.kelas ? ` • ${s.kelas}` : ''}
-                        </span>
+                        {/* Foto kecil di hasil pencarian */}
+                        {s.foto_url ? (
+                          <img
+                            src={s.foto_url}
+                            alt={s.nama}
+                            className="h-9 w-9 rounded-full object-cover border border-slate-200"
+                          />
+                        ) : (
+                          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-200 text-sm font-semibold text-slate-500">
+                            {s.nama.charAt(0)}
+                          </div>
+                        )}
+                        <div className="flex flex-col">
+                          <span className="text-sm text-slate-900">{s.nama}</span>
+                          <span className="text-xs text-slate-500">
+                            NIS {s.nis}
+                            {s.kelas ? ` • ${s.kelas}` : ''}
+                          </span>
+                        </div>
                       </button>
                     </li>
                   ))}

@@ -27,6 +27,7 @@ class StoreSiswaRequest extends FormRequest
             'no_hp' => ['nullable', 'string', 'max:20'],
             'angkatan' => ['required', 'integer', 'min:2000', 'max:2100'],
             'email' => ['nullable', 'email', 'unique:users,email'],
+            'foto' => ['nullable', 'image', 'mimes:jpeg,jpg,png', 'max:2048'], // maks 2MB
         ];
     }
 
@@ -38,6 +39,9 @@ class StoreSiswaRequest extends FormRequest
             'email.unique' => 'Email sudah digunakan akun lain.',
             'jurusan_id.required' => 'Jurusan wajib dipilih.',
             'agama.in' => 'Agama yang dipilih tidak valid.',
+            'foto.image' => 'File harus berupa gambar.',
+            'foto.mimes' => 'Foto harus JPG atau PNG.',
+            'foto.max' => 'Ukuran foto maksimal 2MB.',
         ];
     }
 }

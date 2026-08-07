@@ -55,6 +55,7 @@ class RekapPoinController extends Controller
                 'total_poin' => $total,
                 'status_sanksi' => $sanksi?->nama,
                 'level_sanksi' => $sanksi?->level,
+                'foto_url' => $siswa->foto_url,
             ];
         })
         ->sortByDesc('total_poin')

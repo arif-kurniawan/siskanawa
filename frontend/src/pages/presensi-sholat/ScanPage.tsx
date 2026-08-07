@@ -10,13 +10,18 @@ interface HadirItem {
   kelas: string;
   waktu: string;
   metode: string;
+  foto_url?: string | null;   // ← tambahkan
 }
 
 export function ScanPage() {
   const [scanning, setScanning] = useState(false);
   const [jumlahHadir, setJumlahHadir] = useState(0);
   const [daftarHadir, setDaftarHadir] = useState<HadirItem[]>([]);
-  const [feedback, setFeedback] = useState<{ type: 'success' | 'error' | 'warning'; text: string } | null>(null);
+  const [feedback, setFeedback] = useState<{
+    type: 'success' | 'error' | 'warning';
+    text: string;
+    siswa?: { nama: string; nis: string; kelas?: string | null; foto_url?: string | null };
+  } | null>(null);
   const [manualMode, setManualMode] = useState(false);
   const [searchQ, setSearchQ] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
@@ -24,6 +29,7 @@ export function ScanPage() {
   const scannerRef = useRef<Html5Qrcode | null>(null);
   const lastScanRef = useRef<string>(''); // cegah scan sama berturut-turut
   const lastScanTimeRef = useRef<number>(0);
+  
 
   // Muat sesi & daftar hadir awal
   useEffect(() => {
@@ -41,18 +47,23 @@ export function ScanPage() {
     }
   };
 
-  const showFeedback = (type: 'success' | 'error' | 'warning', text: string) => {
-    setFeedback({ type, text });
-    setTimeout(() => setFeedback(null), 2500);
-  };
+  const showFeedback = (
+    type: 'success' | 'error' | 'warning',
+    text: string,
+    siswa?: { nama: string; nis: string; kelas?: string | null; foto_url?: string | null }
+  ) => {
+    setFeedback({ type, text, siswa });
+    setTimeout(() => setFeedback(null), 4000); // perpanjang jadi 4 detik biar sempat lihat foto
+};
 
   const prosesNis = async (nis: string, metode: 'scan' | 'manual') => {
     try {
       const res = await presensiSholatService.catat({ nis, metode });
       if (res.duplikat) {
         showFeedback('warning', res.message);
-      } else {
-        showFeedback('success', `${res.siswa.nama} — hadir`);
+      }
+      else {
+        showFeedback('success', `${res.siswa.nama} — hadir`, res.siswa);
         refreshDaftar();
       }
     } catch (err: any) {
@@ -124,7 +135,7 @@ export function ScanPage() {
       if (res.duplikat) {
         showFeedback('warning', res.message);
       } else {
-        showFeedback('success', `${res.siswa.nama} — hadir`);
+        showFeedback('success', `${res.siswa.nama} — hadir`, res.siswa);
         refreshDaftar();
         setSearchQ('');
         setSearchResults([]);
@@ -153,13 +164,45 @@ export function ScanPage() {
 
       {/* Feedback */}
       {feedback && (
-        <div className={`rounded-xl p-3 mb-4 flex items-center gap-2 font-medium ${
-          feedback.type === 'success' ? 'bg-green-100 text-green-700' :
-          feedback.type === 'warning' ? 'bg-amber-100 text-amber-700' :
-          'bg-red-100 text-red-700'
+        <div className={`rounded-xl mb-4 ${
+          feedback.type === 'success' ? 'bg-green-50 border border-green-200' :
+          feedback.type === 'warning' ? 'bg-amber-50 border border-amber-200' :
+          'bg-red-50 border border-red-200'
         }`}>
-          {feedback.type === 'success' ? <Check size={18} /> : feedback.type === 'warning' ? <Users size={18} /> : <X size={18} />}
-          {feedback.text}
+          {feedback.type === 'success' && feedback.siswa ? (
+            // Kartu besar dengan foto untuk konfirmasi visual
+            <div className="flex items-center gap-4 p-4">
+              {feedback.siswa.foto_url ? (
+                <img
+                  src={feedback.siswa.foto_url}
+                  alt={feedback.siswa.nama}
+                  className="h-24 w-24 rounded-xl object-cover border-2 border-green-300 shrink-0"
+                />
+              ) : (
+                <div className="flex h-24 w-24 items-center justify-center rounded-xl bg-green-200 text-3xl font-bold text-green-700 shrink-0">
+                  {feedback.siswa.nama.charAt(0)}
+                </div>
+              )}
+              <div className="min-w-0">
+                <div className="flex items-center gap-1.5 text-green-700 font-semibold">
+                  <Check size={18} /> Hadir
+                </div>
+                <p className="text-lg font-bold text-slate-800 truncate">{feedback.siswa.nama}</p>
+                <p className="text-sm text-slate-500">
+                  NIS {feedback.siswa.nis}
+                  {feedback.siswa.kelas ? ` • ${feedback.siswa.kelas}` : ''}
+                </p>
+              </div>
+            </div>
+          ) : (
+            // Feedback biasa untuk warning/error
+            <div className={`p-3 flex items-center gap-2 font-medium ${
+              feedback.type === 'warning' ? 'text-amber-700' : 'text-red-700'
+            }`}>
+              {feedback.type === 'warning' ? <Users size={18} /> : <X size={18} />}
+              {feedback.text}
+            </div>
+          )}
         </div>
       )}
 
@@ -217,9 +260,23 @@ export function ScanPage() {
                   onClick={() => catatManual(s)}
                   className="w-full text-left p-3 rounded-lg hover:bg-brand-50 transition flex items-center justify-between"
                 >
-                  <div>
-                    <p className="font-medium text-slate-800">{s.nama}</p>
-                    <p className="text-xs text-slate-400">{s.nis} • {s.kelas}</p>
+                  <div className="flex items-center gap-3">
+                    {/* Foto siswa */}
+                    {s.foto_url ? (
+                      <img
+                        src={s.foto_url}
+                        alt={s.nama}
+                        className="h-12 w-12 rounded-lg object-cover border border-slate-200"
+                      />
+                    ) : (
+                      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-slate-200 text-base font-bold text-slate-500">
+                        {s.nama.charAt(0)}
+                      </div>
+                    )}
+                    <div>
+                      <p className="font-medium text-slate-800">{s.nama}</p>
+                      <p className="text-xs text-slate-400">{s.nis} • {s.kelas}</p>
+                    </div>
                   </div>
                   <Check size={16} className="text-brand-500" />
                 </button>
@@ -238,9 +295,23 @@ export function ScanPage() {
           <div className="space-y-1 max-h-80 overflow-y-auto">
             {daftarHadir.slice(0, 20).map((h) => (
               <div key={h.id} className="flex items-center justify-between p-2 rounded-lg bg-slate-50">
-                <div className="min-w-0">
-                  <p className="text-sm font-medium text-slate-800 truncate">{h.nama}</p>
-                  <p className="text-xs text-slate-400">{h.nis} • {h.kelas}</p>
+                <div className="flex items-center gap-3 min-w-0">
+                  {/* Foto siswa */}
+                  {h.foto_url ? (
+                    <img
+                      src={h.foto_url}
+                      alt={h.nama}
+                      className="h-10 w-10 rounded-full object-cover border border-slate-200 shrink-0"
+                    />
+                  ) : (
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-200 text-sm font-semibold text-slate-500 shrink-0">
+                      {h.nama.charAt(0)}
+                    </div>
+                  )}
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium text-slate-800 truncate">{h.nama}</p>
+                    <p className="text-xs text-slate-400">{h.nis} • {h.kelas}</p>
+                  </div>
                 </div>
                 <div className="text-right shrink-0">
                   <p className="text-xs text-slate-500">{h.waktu}</p>

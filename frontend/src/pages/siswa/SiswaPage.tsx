@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Plus, Pencil, Trash2, Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import { siswaService } from '../../services/siswa';
-import type { Siswa, SiswaInput } from '../../services/siswa';
+import type { Siswa } from '../../services/siswa';
 import { Modal } from '../../components/ui/Modal';
 import { SiswaForm } from './SiswaForm';
 
@@ -40,7 +40,8 @@ export function SiswaPage() {
   const handleAdd = () => { setEditing(null); setModalOpen(true); };
   const handleEdit = (s: Siswa) => { setEditing(s); setModalOpen(true); };
 
-  const handleSubmit = async (input: SiswaInput) => {
+  // Menerima FormData dari SiswaForm (supaya foto ikut terkirim)
+  const handleSubmit = async (input: FormData) => {
     if (editing) {
       await siswaService.update(editing.id, input);
     } else {
@@ -92,6 +93,7 @@ export function SiswaPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-slate-200 bg-slate-50">
+                <th className="text-left font-semibold text-slate-600 px-4 py-3">Foto</th>
                 <th className="text-left font-semibold text-slate-600 px-4 py-3">NIS</th>
                 <th className="text-left font-semibold text-slate-600 px-4 py-3">Nama</th>
                 <th className="text-left font-semibold text-slate-600 px-4 py-3">Kelas</th>
@@ -102,12 +104,21 @@ export function SiswaPage() {
             </thead>
             <tbody>
               {loading ? (
-                <tr><td colSpan={6} className="text-center text-slate-400 py-8">Memuat data...</td></tr>
+                <tr><td colSpan={7} className="text-center text-slate-400 py-8">Memuat data...</td></tr>
               ) : data.length === 0 ? (
-                <tr><td colSpan={6} className="text-center text-slate-400 py-8">Belum ada data siswa.</td></tr>
+                <tr><td colSpan={7} className="text-center text-slate-400 py-8">Belum ada data siswa.</td></tr>
               ) : (
                 data.map((s) => (
                   <tr key={s.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50">
+                    <td className="px-4 py-3">
+                      {s.foto_url ? (
+                        <img src={s.foto_url} alt={s.nama} className="h-10 w-10 rounded-full object-cover border border-slate-200" />
+                      ) : (
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-200 text-sm font-semibold text-slate-500">
+                          {s.nama.charAt(0)}
+                        </div>
+                      )}
+                    </td>
                     <td className="px-4 py-3 font-mono text-slate-600">{s.nis}</td>
                     <td className="px-4 py-3 font-medium text-slate-800">{s.nama}</td>
                     <td className="px-4 py-3 text-slate-600">{s.kelas?.nama_lengkap || <span className="text-slate-400">—</span>}</td>

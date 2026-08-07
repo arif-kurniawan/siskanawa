@@ -166,8 +166,19 @@ export function RekapPoinPage() {
                   className="cursor-pointer hover:bg-slate-50"
                 >
                   <td className="px-4 py-3">
-                    <div className="text-sm font-medium text-slate-900">{row.nama}</div>
-                    <div className="text-xs text-slate-500">NIS {row.nis}</div>
+                    <div className="flex items-center gap-3">
+                      {row.foto_url ? (
+                        <img src={row.foto_url} alt={row.nama} className="h-9 w-9 rounded-full object-cover" />
+                      ) : (
+                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-200 text-sm font-semibold text-slate-500">
+                          {row.nama.charAt(0)}
+                        </div>
+                      )}
+                      <div>
+                        <div className="text-sm font-medium text-slate-900">{row.nama}</div>
+                        <div className="text-xs text-slate-500">NIS {row.nis}</div>
+                      </div>
+                    </div>
                   </td>
                   <td className="px-4 py-3 text-sm text-slate-600">{row.kelas}</td>
                   <td className="px-4 py-3 text-center">

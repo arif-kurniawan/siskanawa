@@ -89,6 +89,7 @@ class PresensiSholatController extends Controller
                 'nama' => $siswa->user->name,
                 'nis' => $siswa->nis,
                 'kelas' => $siswa->kelas?->nama_lengkap,
+                'foto_url' => $siswa->foto_url,
             ],
             'jumlah_hadir' => $sesi->presensi()->count(),
         ], 201);
@@ -113,6 +114,7 @@ class PresensiSholatController extends Controller
                 'kelas' => $p->siswa->kelas?->nama_lengkap,
                 'waktu' => $p->waktu_scan->format('H:i'),
                 'metode' => $p->metode,
+                'foto_url' => $p->siswa->foto_url,
             ]);
 
         return response()->json(['hadir' => $hadir, 'jumlah' => $hadir->count()]);
@@ -136,6 +138,7 @@ class PresensiSholatController extends Controller
                 'nis' => $s->nis,
                 'nama' => $s->user?->name,
                 'kelas' => $s->kelas?->nama_lengkap,
+                'foto_url' => $s->foto_url,
             ]);
 
         return response()->json($siswa);
@@ -183,6 +186,7 @@ class PresensiSholatController extends Controller
                 'tidak_hadir' => $tidakHadir,
                 'persen_tidak_hadir' => $persenTidakHadir,
                 'kategori' => $kategori,
+                'foto_url' => $s->foto_url,
             ];
         })
         ->sortByDesc('persen_tidak_hadir')

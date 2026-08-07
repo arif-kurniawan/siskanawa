@@ -6,14 +6,14 @@ import type { OptionJurusan } from '../../services/kelas';
 
 interface Props {
   initial?: Siswa | null;
-  onSubmit: (data: SiswaInput) => Promise<void>;
+  onSubmit: (data: FormData) => Promise<void>;
   onCancel: () => void;
 }
 
 export function SiswaForm({ initial, onSubmit, onCancel }: Props) {
   const [form, setForm] = useState<SiswaInput>({
     nama: '', nis: '', nisn: '', jurusan_id: 0, kelas_id: null,
-    jenis_kelamin: 'L', tempat_lahir: '', tanggal_lahir: '', agama:'Islam',
+    jenis_kelamin: 'L', tempat_lahir: '', tanggal_lahir: '', agama: 'Islam',
     alamat: '', no_hp: '', angkatan: new Date().getFullYear(),
     email: '', status: 'aktif',
   });
@@ -23,6 +23,9 @@ export function SiswaForm({ initial, onSubmit, onCancel }: Props) {
   const [jurusanOpts, setJurusanOpts] = useState<OptionJurusan[]>([]);
   const [kelasOpts, setKelasOpts] = useState<OptionKelas[]>([]);
   const [loadingOpts, setLoadingOpts] = useState(true);
+
+  const [foto, setFoto] = useState<File | null>(null);
+  const [fotoPreview, setFotoPreview] = useState<string | null>(null);
 
   useEffect(() => {
     const loadOptions = async () => {
@@ -61,6 +64,8 @@ export function SiswaForm({ initial, onSubmit, onCancel }: Props) {
         status: initial.status,
       });
     }
+    setFoto(null);
+    setFotoPreview(null);
   }, [initial]);
 
   const set = (field: keyof SiswaInput, value: any) => {
@@ -72,10 +77,29 @@ export function SiswaForm({ initial, onSubmit, onCancel }: Props) {
     setLoading(true);
     setErrors({});
     try {
-      await onSubmit(form);
+      const fd = new FormData();
+      fd.append('nama', form.nama);
+      fd.append('nis', form.nis);
+      if (form.nisn) fd.append('nisn', form.nisn);
+      fd.append('jurusan_id', String(form.jurusan_id));
+      if (form.kelas_id) fd.append('kelas_id', String(form.kelas_id));
+      fd.append('jenis_kelamin', form.jenis_kelamin);
+      fd.append('tempat_lahir', form.tempat_lahir);
+      fd.append('tanggal_lahir', form.tanggal_lahir);
+      fd.append('agama', form.agama);
+      fd.append('alamat', form.alamat);
+      if (form.no_hp) fd.append('no_hp', form.no_hp);
+      fd.append('angkatan', String(form.angkatan));
+      if (form.email) fd.append('email', form.email);
+      if (initial && form.status) fd.append('status', form.status);
+      if (foto) fd.append('foto', foto);
+
+      await onSubmit(fd);
     } catch (err: any) {
       if (err.response?.status === 422) {
         setErrors(err.response.data.errors || {});
+      } else {
+        alert(err.response?.data?.message || 'Gagal menyimpan data.');
       }
     } finally {
       setLoading(false);
@@ -161,12 +185,12 @@ export function SiswaForm({ initial, onSubmit, onCancel }: Props) {
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-1">Agama</label>
           <select value={form.agama} onChange={(e) => set('agama', e.target.value)} className={inputClass}>
-            <option value="Islam">Islam</option>
-            <option value="Kristen">Kristen</option>
-            <option value="Katolik">Katolik</option>
-            <option value="Hindu">Hindu</option>
-            <option value="Budha">Budha</option>
-            <option value="Konghuchu">Konghuchu</option>
+            <option value="islam">Islam</option>
+            <option value="kristen">Kristen</option>
+            <option value="katolik">Katolik</option>
+            <option value="hindu">Hindu</option>
+            <option value="buddha">Buddha</option>
+            <option value="konghucu">Konghucu</option>
           </select>
         </div>
       </div>
@@ -201,6 +225,34 @@ export function SiswaForm({ initial, onSubmit, onCancel }: Props) {
           </select>
         </div>
       )}
+
+      <div>
+        <label className="block text-sm font-medium text-slate-700 mb-1">
+          Foto Siswa <span className="text-slate-400">(opsional)</span>
+        </label>
+        <div className="flex items-center gap-3">
+          {/* Preview */}
+          {fotoPreview ? (
+            <img src={fotoPreview} alt="Preview" className="h-16 w-16 rounded-lg object-cover border border-slate-200" />
+          ) : initial?.foto_url ? (
+            <img src={initial.foto_url} alt="Foto saat ini" className="h-16 w-16 rounded-lg object-cover border border-slate-200" />
+          ) : (
+            <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-slate-200 text-slate-400 text-xs">
+              Tidak ada
+            </div>
+          )}
+          <input
+            type="file"
+            accept="image/jpeg,image/png"
+            onChange={(e) => {
+              const file = e.target.files?.[0] ?? null;
+              setFoto(file);
+              setFotoPreview(file ? URL.createObjectURL(file) : null);
+            }}
+            className="block text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-brand-50 file:px-3 file:py-2 file:text-sm file:font-medium file:text-brand-700 hover:file:bg-brand-100"
+          />
+        </div>
+      </div>
 
       {!initial && (
         <p className="text-xs text-slate-500 bg-slate-50 rounded-lg p-3">
