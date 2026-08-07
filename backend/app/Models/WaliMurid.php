@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+
 class WaliMurid extends Model
 {
     protected $table = 'wali_murid';
@@ -49,4 +50,5 @@ class WaliMurid extends Model
     {
         return $this->siswa()->where('status', 'aktif');
     }
+
 }

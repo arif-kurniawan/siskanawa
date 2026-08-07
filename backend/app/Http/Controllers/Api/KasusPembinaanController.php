@@ -9,6 +9,7 @@ use App\Models\TindakLanjutKasus;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class KasusPembinaanController extends Controller
 {
@@ -125,16 +126,27 @@ class KasusPembinaanController extends Controller
             'isi' => ['required', 'string'],
             'ditujukan_ke_ortu' => ['boolean'],
             'ubah_status' => ['nullable', 'in:baru,ditangani,dipantau,selesai'],
+            'foto' => ['nullable', 'image', 'mimes:jpeg,jpg,png', 'max:4096'],
+            'dokumen' => ['nullable', 'file', 'mimes:pdf,doc,docx', 'max:8192'],
         ]);
 
         DB::transaction(function () use ($validated, $request, $kasusPembinaan) {
-            TindakLanjutKasus::create([
+            $data = [
                 'kasus_pembinaan_id' => $kasusPembinaan->id,
                 'user_id' => $request->user()->id,
                 'jenis' => $validated['jenis'],
                 'isi' => $validated['isi'],
                 'ditujukan_ke_ortu' => $validated['ditujukan_ke_ortu'] ?? false,
-            ]);
+            ];
+
+            if ($request->hasFile('foto')) {
+                $data['foto_path'] = $request->file('foto')->store('tindak-lanjut/foto', 'public');
+            }
+            if ($request->hasFile('dokumen')) {
+                $data['dokumen_path'] = $request->file('dokumen')->store('tindak-lanjut/dokumen', 'public');
+            }
+
+            TindakLanjutKasus::create($data);
 
             // Kalau sekalian ubah status
             if (! empty($validated['ubah_status']) && $validated['ubah_status'] !== $kasusPembinaan->status) {
@@ -194,5 +206,25 @@ class KasusPembinaanController extends Controller
         return response()->json([
             'message' => "Kasus dieskalasi ke {$levelBerikutnya}.",
         ]);
+    }
+
+    public function rules(): array
+    {
+        return [
+            // ... aturan yang sudah ada (isi, jenis, ditujukan_ke_ortu) ...
+            'foto' => ['nullable', 'image', 'mimes:jpeg,jpg,png', 'max:4096'],       // maks 4MB
+            'dokumen' => ['nullable', 'file', 'mimes:pdf,doc,docx', 'max:8192'],     // maks 8MB
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'foto.image' => 'File foto harus berupa gambar.',
+            'foto.mimes' => 'Foto harus berformat JPG atau PNG.',
+            'foto.max' => 'Ukuran foto maksimal 4MB.',
+            'dokumen.mimes' => 'Dokumen harus berformat PDF atau Word.',
+            'dokumen.max' => 'Ukuran dokumen maksimal 8MB.',
+        ];
     }
 }

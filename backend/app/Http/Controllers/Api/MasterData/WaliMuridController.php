@@ -119,7 +119,7 @@ class WaliMuridController extends Controller
     {
         // Kalau tidak ada email, buat placeholder unik dari nama + random
         $slug = Str::slug($data['name'], '.');
-        return "{$slug}." . Str::random(4) . "@wali.smkn9-malang.sch.id";
+        return "{$slug}." . Str::random(4) . "@wali.smkn9malang.sch.id";
     }
 
     // Sinkron daftar anak ke pivot (dipakai store & kelola hubungan)

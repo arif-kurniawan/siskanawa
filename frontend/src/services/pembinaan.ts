@@ -30,6 +30,8 @@ export interface TindakLanjut {
   level_dari: string | null;
   level_ke: string | null;
   user?: { name: string };
+  foto_url?: string | null;
+  dokumen_url?: string | null;
   created_at: string;
 }
 
@@ -55,12 +57,26 @@ export const pembinaanService = {
     const res = await apiClient.post('/api/pembinaan', data);
     return res.data;
   },
-  async tambahTindakLanjut(id: number, data: { jenis: string; isi: string; ditujukan_ke_ortu?: boolean; ubah_status?: string }) {
-    const res = await apiClient.post(`/api/pembinaan/${id}/tindak-lanjut`, data);
+  async tambahTindakLanjut(id: number, data: { jenis: string; isi: string; ditujukan_ke_ortu?: boolean; ubah_status?: string; foto?: File | null; dokumen?: File | null }) 
+  {
+    const form = new FormData();
+    form.append('jenis', data.jenis);
+    form.append('isi', data.isi);
+    form.append('ditujukan_ke_ortu', data.ditujukan_ke_ortu ? '1' : '0');
+    if (data.ubah_status) form.append('ubah_status', data.ubah_status);
+    if (data.foto) form.append('foto', data.foto);
+    if (data.dokumen) form.append('dokumen', data.dokumen);
+
+    const res = await apiClient.post(`/api/pembinaan/${id}/tindak-lanjut`, form, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
     return res.data;
   },
+
   async eskalasi(id: number, catatan: string) {
     const res = await apiClient.post(`/api/pembinaan/${id}/eskalasi`, { catatan });
     return res.data;
   },
+
+  
 };

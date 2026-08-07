@@ -60,8 +60,13 @@ export function KasusDetailPage() {
         isi,
         ditujukan_ke_ortu: ditujukanKeOrtu,
         ubah_status: ubahStatus || undefined,
+        foto,        // ← harus ada
+        dokumen,     // ← harus ada
       });
       // Reset form & reload
+      // reset
+      setFoto(null);
+      setDokumen(null)
       setIsi('');
       setDitujukanKeOrtu(false);
       setUbahStatus('');
@@ -88,6 +93,9 @@ export function KasusDetailPage() {
       setEskalasiLoading(false);
     }
   };
+
+const [foto, setFoto] = useState<File | null>(null);
+const [dokumen, setDokumen] = useState<File | null>(null);
 
   // Label & warna helper
   const levelLabel = (l: string) => ({
@@ -283,6 +291,49 @@ export function KasusDetailPage() {
                   </div>
                   <p className="text-sm text-slate-600 mt-0.5 whitespace-pre-wrap">{t.isi}</p>
                   <p className="text-xs text-slate-400 mt-1">{formatWaktu(t.created_at)}</p>
+
+                  {/* Lampiran foto & dokumen */}
+                  {(t.foto_url || t.dokumen_url) && (
+                    <div className="mt-2 flex flex-wrap items-center gap-2">
+                      {t.foto_url && (
+                        <a href={t.foto_url} target="_blank" rel="noopener noreferrer">
+                          <img
+                            src={t.foto_url}
+                            alt="Foto penanganan"
+                            className="max-h-40 rounded-lg border border-slate-200 object-cover hover:opacity-90"
+                          />
+                        </a>
+                      )}
+                      {t.dokumen_url && (
+                        <a href={t.dokumen_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium text-brand-700 hover:bg-slate-50">
+                          <FileText size={14} /> Lihat Dokumen Bukti
+                        </a>
+                      )}
+                    </div>
+                  )}
+
+
+                  {/* Balasan dari orang tua */}
+                  {(t as any).respons_ortu && (t as any).respons_ortu.length > 0 && (
+                    <div className="mt-2 space-y-2 border-l-2 border-green-200 pl-3">
+                      {(t as any).respons_ortu.map((r: any) => (
+                        <div key={r.id} className="rounded-lg bg-green-50 px-3 py-2">
+                          <div className="flex items-baseline justify-between gap-2">
+                            <span className="text-xs font-semibold text-green-800">
+                              Balasan dari {r.wali_murid?.user?.name ?? 'Orang tua'}
+                            </span>
+                            <span className="text-xs text-slate-400">
+                              {formatWaktu(r.created_at)}
+                            </span>
+                          </div>
+                          <p className="text-sm text-slate-700 mt-0.5 whitespace-pre-wrap">{r.isi}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
@@ -319,6 +370,36 @@ export function KasusDetailPage() {
               className="w-full px-3 py-2 rounded-lg border border-slate-300 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100 text-sm"
               rows={3}
             />
+
+            <div className="space-y-3">
+              {/* Foto */}
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">
+                  Foto Penanganan <span className="text-slate-400">(opsional)</span>
+                </label>
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png"
+                  onChange={(e) => setFoto(e.target.files?.[0] ?? null)}
+                  className="block w-full text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-brand-50 file:px-3 file:py-2 file:text-sm file:font-medium file:text-brand-700 hover:file:bg-brand-100"
+                />
+                {foto && <p className="mt-1 text-xs text-slate-500">{foto.name}</p>}
+              </div>
+
+              {/* Dokumen */}
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">
+                  Dokumen Bukti <span className="text-slate-400">(opsional, PDF/Word)</span>
+                </label>
+                <input
+                  type="file"
+                  accept=".pdf,.doc,.docx"
+                  onChange={(e) => setDokumen(e.target.files?.[0] ?? null)}
+                  className="block w-full text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-brand-50 file:px-3 file:py-2 file:text-sm file:font-medium file:text-brand-700 hover:file:bg-brand-100"
+                />
+                {dokumen && <p className="mt-1 text-xs text-slate-500">{dokumen.name}</p>}
+              </div>
+            </div>
 
             {jenis === 'komunikasi_ortu' && (
               <label className="flex items-center gap-2 cursor-pointer">

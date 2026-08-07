@@ -33,6 +33,13 @@ class CatatanPelanggaranResource extends JsonResource
                 'name' => $this->pencatat->name,
             ]),
             'created_at' => $this->created_at?->format('Y-m-d H:i'),
+
+            'respons_ortu' => $this->whenLoaded('responsOrtu', fn () => $this->responsOrtu->map(fn ($r) => [
+                'id' => $r->id,
+                'isi' => $r->isi,
+                'dari' => $r->waliMurid?->user?->name ?? 'Orang tua',
+                'tanggal' => $r->created_at?->format('Y-m-d H:i'),
+            ])),
         ];
     }
 }
