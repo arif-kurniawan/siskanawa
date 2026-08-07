@@ -94,6 +94,7 @@ export function CatatPelanggaranPage() {
           nama: s.nama,
           nis: s.nis,
           kelas: s.kelas?.nama_lengkap ?? s.kelas?.nama ?? undefined,
+          foto_url: s.foto_url ?? null,
         }))
       );
     } catch {
