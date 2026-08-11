@@ -14,8 +14,8 @@ class UpdateWaliMuridRequest extends FormRequest
 
     public function rules(): array
     {
-        $wali = $this->route('wali_murid');
-        $userId = $wali->user_id;
+        $wali = $this->route('waliMurid');
+        $userId = $wali?->user_id;
 
         return [
             'name' => ['required', 'string', 'max:100'],
