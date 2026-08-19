@@ -36,6 +36,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('kelas', KelasController::class)->parameters(['kelas' => 'kelas']);
     Route::patch('tahun-ajaran/{tahunAjaran}/set-active', [TahunAjaranController::class, 'setActive']);
     Route::post('siswa/{siswa}/foto', [SiswaController::class, 'updateFoto']);
+    Route::post('siswa/import', [SiswaController::class, 'import']);
     Route::apiResource('siswa', SiswaController::class);
     Route::apiResource('guru', GuruController::class);
     Route::apiResource('tendik', TendikController::class);

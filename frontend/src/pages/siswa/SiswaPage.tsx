@@ -4,6 +4,9 @@ import { siswaService } from '../../services/siswa';
 import type { Siswa } from '../../services/siswa';
 import { Modal } from '../../components/ui/Modal';
 import { SiswaForm } from './SiswaForm';
+import { Upload } from 'lucide-react';
+
+
 
 export function SiswaPage() {
   const [data, setData] = useState<Siswa[]>([]);
@@ -14,6 +17,10 @@ export function SiswaPage() {
   const [total, setTotal] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<Siswa | null>(null);
+  const [importOpen, setImportOpen] = useState(false);
+  const [importFile, setImportFile] = useState<File | null>(null);
+  const [importing, setImporting] = useState(false);
+  const [importResult, setImportResult] = useState<any>(null);
 
   const load = async (searchTerm?: string, pageNum = 1) => {
     setLoading(true);
@@ -51,6 +58,21 @@ export function SiswaPage() {
     load(search, page);
   };
 
+  const handleImport = async () => {
+    if (!importFile) return;
+    setImporting(true);
+    setImportResult(null);
+    try {
+      const res = await siswaService.import(importFile);
+      setImportResult(res);
+      load(search, 1); // muat ulang daftar
+    } catch (err: any) {
+      alert(err.response?.data?.message || 'Gagal mengimpor.');
+    } finally {
+      setImporting(false);
+    }
+  };
+
   const handleDelete = async (s: Siswa) => {
     if (!confirm(`Hapus siswa "${s.nama}"? Akun login-nya juga akan dihapus.`)) return;
     try {
@@ -80,6 +102,11 @@ export function SiswaPage() {
         </div>
         <button onClick={handleAdd} className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-brand-500 hover:bg-brand-600 text-white font-medium transition">
           <Plus size={18} /> Tambah Siswa
+        </button>
+        <button
+          onClick={() => { setImportOpen(true); setImportResult(null); setImportFile(null); }}
+          className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-brand-500 text-brand-600 font-medium hover:bg-brand-50 transition">
+          <Upload size={18} /> Import Excel
         </button>
       </div>
 
@@ -167,6 +194,62 @@ export function SiswaPage() {
 
       <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={editing ? 'Edit Siswa' : 'Tambah Siswa'}>
         <SiswaForm initial={editing} onSubmit={handleSubmit} onCancel={() => setModalOpen(false)} />
+      </Modal>
+
+      <Modal isOpen={importOpen} onClose={() => setImportOpen(false)} title="Import Data Siswa">
+        <div className="space-y-4">
+          {/* Unduh template */}
+          <div className="rounded-lg bg-slate-50 p-3 text-sm text-slate-600">
+            Unduh <a href="/templates/Template_Import_Siswa.xlsx" download className="font-medium text-brand-600 hover:underline">template Excel</a>,
+            isi sesuai format, lalu unggah di sini. Kolom jurusan pakai kode (mis. RPL),
+            kelas pakai nama (mis. X RPL 1) yang sudah terdaftar.
+          </div>
+
+          {/* Pilih file */}
+          <input
+            type="file"
+            accept=".xlsx,.xls"
+            onChange={(e) => setImportFile(e.target.files?.[0] ?? null)}
+            className="block w-full text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-brand-50 file:px-3 file:py-2 file:text-sm file:font-medium file:text-brand-700 hover:file:bg-brand-100"
+          />
+
+          {/* Hasil import */}
+          {importResult && (
+            <div className="rounded-lg border border-slate-200 p-3 space-y-2">
+              <div className="flex gap-4 text-sm">
+                <span className="text-green-600 font-medium">Berhasil: {importResult.ringkasan.berhasil}</span>
+                <span className="text-red-600 font-medium">Gagal: {importResult.ringkasan.gagal}</span>
+                <span className="text-amber-600 font-medium">Dilewati: {importResult.ringkasan.dilewati}</span>
+              </div>
+
+              {/* Detail gagal */}
+              {importResult.detail.gagal.length > 0 && (
+                <div className="max-h-40 overflow-auto text-xs">
+                  <p className="font-medium text-slate-700 mb-1">Baris gagal:</p>
+                  {importResult.detail.gagal.map((g: any, i: number) => (
+                    <div key={i} className="text-red-600">
+                      Baris {g.baris} (NIS {g.nis || '-'}): {g.alasan}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Tombol */}
+          <div className="flex justify-end gap-2">
+            <button onClick={() => setImportOpen(false)} className="px-4 py-2 rounded-lg border border-slate-300 text-sm font-medium text-slate-700 hover:bg-slate-50">
+              Tutup
+            </button>
+            <button
+              onClick={handleImport}
+              disabled={!importFile || importing}
+              className="px-4 py-2 rounded-lg bg-brand-500 text-white text-sm font-medium hover:bg-brand-600 disabled:opacity-50"
+            >
+              {importing ? 'Mengimpor...' : 'Mulai Import'}
+            </button>
+          </div>
+        </div>
       </Modal>
     </div>
   );

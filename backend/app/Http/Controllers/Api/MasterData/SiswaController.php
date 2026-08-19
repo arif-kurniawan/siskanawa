@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
+use App\Imports\SiswaImport;
+use Maatwebsite\Excel\Facades\Excel;
+
 class SiswaController extends Controller
 {
     public function index(Request $request): JsonResponse
@@ -160,6 +163,37 @@ class SiswaController extends Controller
         return response()->json([
             'message' => 'Foto siswa berhasil diperbarui.',
             'foto_url' => $siswa->foto_url,
+        ]);
+    }
+
+    public function import(Request $request): JsonResponse
+    {
+        $request->validate([
+            'file' => ['required', 'file', 'mimes:xlsx,xls', 'max:10240'], // maks 10MB
+        ]);
+
+        $import = new SiswaImport();
+
+        try {
+            Excel::import($import, $request->file('file'));
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Gagal memproses file: ' . $e->getMessage(),
+            ], 422);
+        }
+
+        return response()->json([
+            'message' => 'Import selesai.',
+            'ringkasan' => [
+                'berhasil' => count($import->berhasil),
+                'gagal' => count($import->gagal),
+                'dilewati' => count($import->dilewati),
+            ],
+            'detail' => [
+                'berhasil' => $import->berhasil,
+                'gagal' => $import->gagal,
+                'dilewati' => $import->dilewati,
+            ],
         ]);
     }
 

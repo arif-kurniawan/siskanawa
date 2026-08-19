@@ -12,6 +12,7 @@
         "laravel/reverb": "^1.10",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^3.0",
+        "maatwebsite/excel": "^4.0",
         "nwidart/laravel-modules": "^13.0",
         "predis/predis": "^3.5",
         "spatie/laravel-activitylog": "^4.12",

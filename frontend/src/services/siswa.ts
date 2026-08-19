@@ -80,6 +80,15 @@ export const siswaService = {
     return res.data;
   },
 
+  async import(file: File) {
+    const form = new FormData();
+    form.append('file', file);
+    const res = await apiClient.post('/api/siswa/import', form, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return res.data;
+  },
+
   async remove(id: number): Promise<void> {
     await apiClient.delete(`/api/siswa/${id}`);
   },
